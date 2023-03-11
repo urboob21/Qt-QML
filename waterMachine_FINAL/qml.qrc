@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/">
+        <file>UI/Assets/checked.png</file>
+        <file>UI/Assets/coffee-beans.png</file>
+        <file>UI/Assets/coke.png</file>
+        <file>UI/Assets/cold-glass.png</file>
+        <file>UI/Assets/cold-water.png</file>
+        <file>UI/Assets/dose.png</file>
+        <file>UI/Assets/green-tea.png</file>
+        <file>UI/Assets/hot.png</file>
+        <file>UI/Assets/hot-glass.png</file>
+        <file>UI/Assets/previous-cold.png</file>
+        <file>UI/Assets/previous-hot.png</file>
+        <file>UI/Assets/refresh-arrow.png</file>
+        <file>UI/Assets/refresh-cold.png</file>
+        <file>UI/Assets/refresh-hot.png</file>
+        <file>UI/Assets/snowflake.png</file>
+        <file>UI/Assets/water-hot.png</file>
+        <file>UI/Assets/wifi.png</file>
+        <file>UI/HotColdSelect.qml</file>
+        <file>UI/main.qml</file>
+        <file>UI/StaBar.qml</file>
+        <file>UI/TempStyle.qml</file>
+        <file>UI/TypeStyle.qml</file>
+        <file>UI/Dispend.qml</file>
+        <file>UI/EndPage.qml</file>
+    </qresource>
+</RCC>
