@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<RCC version="1.0">
+    <qresource prefix="/UART">
+        <file alias="main.qml">../UART/main.qml</file>
+    </qresource>
+</RCC>

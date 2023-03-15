@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/UART">
+<file alias="main.qml">D:/nWorld/12_myGit/Qt-QML/UART/main.qml</file>
+</qresource>
+</RCC>

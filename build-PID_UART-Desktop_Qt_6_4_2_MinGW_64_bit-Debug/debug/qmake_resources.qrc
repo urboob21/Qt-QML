@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+<file alias="main.qml">D:/nWorld/12_myGit/Qt-QML/PID_UART/main.qml</file>
+<file alias="SerialPage.qml">D:/nWorld/12_myGit/Qt-QML/PID_UART/SerialPage.qml</file>
+<file alias="TuningPage.qml">D:/nWorld/12_myGit/Qt-QML/PID_UART/TuningPage.qml</file>
+</qresource>
+</RCC>

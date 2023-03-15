@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+<file alias="main.qml">D:/nWorld/12_myGit/Qt-QML/TEST/main.qml</file>
+<file alias="MyCode.qml">D:/nWorld/12_myGit/Qt-QML/TEST/MyCode.qml</file>
+</qresource>
+</RCC>

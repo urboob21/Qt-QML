@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/MOTOR_CONTROL">
+<file alias="main.qml">D:/nWorld/12_myGit/Qt-QML/MOTOR_CONTROL/main.qml</file>
+</qresource>
+</RCC>

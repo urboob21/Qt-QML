@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<RCC>
+    <qresource prefix="/">
+        <file alias="main.qml">../UART/main.qml</file>
+        <file alias="MyPage.qml">../UART/MyPage.qml</file>
+    </qresource>
+</RCC>
