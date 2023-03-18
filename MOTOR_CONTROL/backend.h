@@ -6,10 +6,13 @@
 #include <QObject>
 #include <qqml.h>
 #include <stdint.h>
+#include "mylib/mylib.h"
+#include <QPointF>
 
 //
 class BackEnd : public QObject
 {
+        Q_OBJECT
     //COM/BAUD
     Q_PROPERTY(QString b_com READ b_com WRITE setB_com NOTIFY b_comChanged)
     Q_PROPERTY(QString b_baud READ b_baud WRITE setB_baud NOTIFY b_baudChanged)
@@ -18,9 +21,23 @@ class BackEnd : public QObject
     Q_PROPERTY(QString b_ki READ b_ki WRITE setB_ki NOTIFY b_kiChanged)
     Q_PROPERTY(QString b_kd READ b_kd WRITE setB_kd NOTIFY b_kdChanged)
 
-    Q_OBJECT
+    //chart data
+    Q_PROPERTY(QPointF b_point READ b_point WRITE setB_point NOTIFY b_pointChanged)
+
+
+
+
+
+
 public:
     explicit BackEnd(QObject *parent = nullptr);
+//my lib
+    MyLib mylib;
+
+// data chart
+
+
+
 //
     QSerialPort *serialp = new QSerialPort;
     QString b_com() const;
@@ -35,7 +52,7 @@ public:
 
 
 -------------------------------------------------------------------------*/
-    char protocol[18];
+    char protocol[22];
     uint8_t pSTX={0x02};
     uint8_t pETX={0x03};
     uint8_t pRW={0x06};
@@ -46,7 +63,12 @@ public:
     uint8_t pCMD[4]={0x00,0x00,0x00,0x00};
   //  uint8_t pGPID[4]={}
     uint8_t pOPT[3]={0x00,0x00,0x00};
-    uint8_t pDATA[8]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t pDATA[12]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
+    int size_protocol=22;
+    QByteArray data_rv;
+    //
+    uint8_t p_leng=0;
 
 
 
@@ -63,9 +85,12 @@ public:
 
 
 
+    QPointF b_point() const;
+    void setB_point(QPointF newB_point);
 
 public slots:
     //my f
+    Q_INVOKABLE void myfuntion();
     Q_INVOKABLE void UART_connect();
     Q_INVOKABLE void serialport_read();
     Q_INVOKABLE void serialport_send(uint8_t* tCMD);
@@ -73,8 +98,7 @@ public slots:
     Q_INVOKABLE void uart_SEND();
     Q_INVOKABLE void uart_TUNING();
     Q_INVOKABLE void uart_REQUEST();
-    void floatto2Array(float value,uint8_t* r_value);
-    void floatto3Array(float value,uint8_t* r_value);
+
 
     //
     void setB_baud(const QString &b_baud);
@@ -83,6 +107,9 @@ public slots:
     void setB_ki(const QString &newB_ki);
     void setB_kd(const QString &newB_kd);
 signals:
+
+    void my_signal();
+
     //mysignal
     void uart_open();
     void uart_close();
@@ -99,12 +126,17 @@ signals:
 
     void b_kdChanged();
 
+    void b_pointChanged();
+
 private:
     QString mb_com;
     QString mb_baud;
     QString m_b_kp;
     QString m_b_ki;
     QString m_b_kd;
+
+
+    QPointF m_b_point;
 };
 
 #endif // BACKEND_H

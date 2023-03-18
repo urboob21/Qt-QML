@@ -4,6 +4,7 @@ import MyBackEnd 1.0
 
 Rectangle{
     id:page_serial
+    color:"#C9CDEA"
     Image{
         id:pic
         source:"qrc:/pictures/logo.jpg"

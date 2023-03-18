@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/Model_MVC">
+<file alias="main.qml">D:/nWorld/12_myGit/Qt-QML/Model_MVC/main.qml</file>
+</qresource>
+</RCC>

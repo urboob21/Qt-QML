@@ -8,14 +8,20 @@ Window {
     title: qsTr("Hello World")
     //btn_conect name
     property string btn_connect_name: "Connect"
+    signal datachange()
 
+    onDatachange: {
+        console.log("huhu")
+    }
 
     //
    StackView {
        id:m_stackview
        anchors.fill:parent
        initialItem: "SerialPage.qml"
-       //initialItem: "ControlPage.qml"
+        signal datachange
+       onDatachange:{
+       console.log("jaja")}
    }
     BackEnd{
         id:mybackend
@@ -30,6 +36,11 @@ Window {
             btn_connect_name="DisConnect"
         }
         //
+        onB_pointChanged:{
+            emit: datachange()
+        }
     }
+
+
 
 }

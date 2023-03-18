@@ -1,8 +1,13 @@
 import QtQuick
 import QtQuick.Controls 2.15
 import QtCharts 2.15
+import MyBackEnd 1.0
+
+
 Rectangle {
 
+
+    color:"#C9CDEA"
 //next button
     Button{
         width: 100
@@ -34,8 +39,18 @@ Rectangle {
         }
     }
 //
+    Button{
+        text:"GET"
+        anchors{
+            right: parent.right
+        }
+        onClicked: mybackend.myfuntion();
+    }
+
+//
     GroupBox{
         id:gb_tuning
+        font.pixelSize: 15
         title: "Tuning"
         anchors{
             centerIn: parent
@@ -100,7 +115,7 @@ Rectangle {
                     onClicked: {
                         //send data
                         mybackend.uart_TUNING();
-                    }
+                     }
                 }
                 Button{
                     id:btn_request
@@ -164,15 +179,15 @@ Rectangle {
                         axisY: axisY1
                     }
 
-                    LineSeries {
-                        id: lineSeries2
-                        name: "TUNING POINT"
-                        color: "red"
+//                    LineSeries {
+//                        id: lineSeries2
+//                        name: "TUNING POINT"
+//                        color: "red"
 
-                        axisX: axisX
-                        axisY: axisY1
+//                        axisX: axisX
+//                        axisY: axisY1
 
-                    }
+//                    }
                 }
        //
         }

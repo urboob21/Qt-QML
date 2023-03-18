@@ -1,4 +1,5 @@
 #include "backend.h"
+
 #include <QDebug>
 BackEnd::BackEnd(QObject *parent)
     : QObject{parent}
@@ -61,11 +62,25 @@ Q_INVOKABLE void BackEnd::uart_SEND(){
     //send
     //(1)get data from input QString
     //qDebug()<<" Kp:"<<m_b_kp<<" Ki:"<<m_b_ki<<" Kd:"<<m_b_kd;
-
+    uint8_t sKp[4];
+    uint8_t sKi[4];
+    uint8_t sKd[4];
     //(2) QString to float
     float f_kp=m_b_kp.toFloat();
     float f_ki=m_b_ki.toFloat();
     float f_kd=m_b_kd.toFloat();
+
+    mylib.float2Ints(f_kp,sKp);
+    mylib.float2Ints(f_ki,sKi);
+    mylib.float2Ints(f_kd,sKd);
+
+    int index=0;
+    memcpy(pDATA,sKp,sizeof(sKp));
+    index=index+sizeof(sKp);
+    memcpy(pDATA+index,sKi,sizeof(sKi));
+    index=index+sizeof(sKi);
+    memcpy(pDATA+index,sKd,sizeof(sKd));
+
     // float toarray
     serialport_send(pSPID);
 } //SEND PID value
@@ -82,11 +97,7 @@ Q_INVOKABLE void BackEnd::uart_REQUEST(){
 } //SEND request <- STM
 
 
-Q_INVOKABLE void BackEnd::serialport_read()
-{
 
-
-}
 Q_INVOKABLE void BackEnd::serialport_send(uint8_t* tCMD){
     if(!(serialp->isOpen()))
     {
@@ -122,23 +133,9 @@ Q_INVOKABLE void BackEnd::serialport_send(uint8_t* tCMD){
     }
 }
  //test....
-void BackEnd::floatto2Array(float value,uint8_t* r_value){
-    float temp;
-    r_value[0]=(uint8_t)value;
-    temp=value-(float)r_value[0];
-            temp*=10;
-            r_value[1]=(uint8_t)temp;
-} //<255>.<9>  -> byte[0] * byte[1]/10
 
-void BackEnd::floatto3Array(float value, uint8_t *r_value)
-{
-    float temp;
-    r_value[0]=(uint8_t)value;
-    temp=value-(float)r_value[0];
-            temp*=10;
-            r_value[1]=(uint8_t)temp;
-}
-//...test
+
+
 
 QString BackEnd::b_kp() const
 {
@@ -177,4 +174,60 @@ void BackEnd::setB_kd(const QString &newB_kd)
         return;
     m_b_kd = newB_kd;
     emit b_kdChanged();
+}
+
+
+/////
+QPointF BackEnd::b_point() const
+{
+    return m_b_point;
+}
+
+void BackEnd::setB_point(QPointF newB_point)
+{
+    if (m_b_point == newB_point)
+        return;
+    m_b_point = newB_point;
+    emit b_pointChanged(); //tin hieu set o duoi qml
+}
+
+
+
+
+
+Q_INVOKABLE void BackEnd::myfuntion(){
+    float x=0,y=0;
+    QPointF a;
+    for (int i=0;i<10;i++)
+    {
+        x=x+1;
+        y=y+10;
+        a.setX(x);
+        a.setX(y);
+        setB_point(a);
+    }
+    qDebug()<<"Chung ta xong roi";
+}
+
+
+
+
+//
+
+
+
+Q_INVOKABLE void BackEnd::serialport_read()
+{
+//check data
+
+    int size =serialp->bytesAvailable();
+    if(size==size_protocol)
+    {
+        data_rv=serialp->readAll();
+        if(data_rv[0]=='2' && data_rv[size_protocol-1]=='3')
+            qDebug()<<"Nhan data thanh cong";
+    //do some thing take,collect data
+        // bytes -> float ?? ->
+
+    }
 }

@@ -4,6 +4,7 @@
 #include <QtCharts>
 #include <QQuickStyle>
 #include <backend.h>
+#include <QQmlContext>
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -16,7 +17,10 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
     engine.load(url);
+
+
 
     return app.exec();
 }

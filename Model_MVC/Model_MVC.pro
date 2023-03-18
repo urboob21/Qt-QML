@@ -8,6 +8,10 @@ resources.prefix = /$${TARGET}
 RESOURCES += resources \
     qml.qrc
 
+LIBS+= -L$$PWD/mylib -lMyLib
+INCLUDEPATH +=$$PWD/mylib
+DEPENDPATH +=$$PWD/mylib
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
