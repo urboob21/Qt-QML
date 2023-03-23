@@ -45,18 +45,16 @@ public:
     QString b_kp() const;
     QString b_kd() const;
     QString b_ki() const;
-//my protocol - 18bytes
+//my protocol - 22 bytes
 /*----------------------------------------------------------------------
-|STX |   CMD   |OPTION |DATA  |R   /   W|ETX |
-|0x02|  4bytes |3bytes |8bytes|0x16/0x06|0x03|
+|STX |   CMD   |OPTION |DATA    |ETX |
+|0x02|  4bytes |3bytes |12 bytes|0x03|
 
-
+1+4+3+12+1=21
 -------------------------------------------------------------------------*/
-    char protocol[22];
+    char protocol[21];
     uint8_t pSTX={0x02};
     uint8_t pETX={0x03};
-    uint8_t pRW={0x06};
-    uint8_t pWR={0x16};
     uint8_t pSPID[4]={0x53,0x50,0x49,0x44}; //ASCII {SPID}
      uint8_t pCTUN[4]={0x43,0x54,0x55,0x4E}; //ASCII
       uint8_t pGPID[4]={0x47,0x50,0x49,0x44}; //ASCII
@@ -65,7 +63,7 @@ public:
     uint8_t pOPT[3]={0x00,0x00,0x00};
     uint8_t pDATA[12]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-    int size_protocol=22;
+    int size_protocol=21;
     QByteArray data_rv;
     //
     uint8_t p_leng=0;

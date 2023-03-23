@@ -41,6 +41,8 @@ Q_INVOKABLE void BackEnd::UART_connect(){
         serialp->setPortName(BackEnd::mb_com);
         if(BackEnd::mb_baud=="9600")
             serialp->setBaudRate(QSerialPort::Baud9600);
+        else if(BackEnd::mb_baud=="115200")
+            serialp->setBaudRate(QSerialPort::Baud115200);
         serialp->setDataBits(QSerialPort::Data8);
         serialp->setParity(QSerialPort::NoParity);
         serialp->open(QIODevice::ReadWrite);
@@ -120,8 +122,6 @@ Q_INVOKABLE void BackEnd::serialport_send(uint8_t* tCMD){
     index=index+sizeof(pOPT);
     memcpy(protocol+index,pDATA,sizeof(pDATA));
     index=index+sizeof(pDATA);
-    memcpy(protocol+index,&pWR,sizeof(pWR));
-    index=index+sizeof(pWR);
     memcpy(protocol+index,&pETX,sizeof(pETX));
     index=index+sizeof(pETX);
     //sent data
@@ -130,6 +130,7 @@ Q_INVOKABLE void BackEnd::serialport_send(uint8_t* tCMD){
 
     //emit
     emit uart_send();
+    qDebug()<<"data send:"<<protocol <<pDATA;
     }
 }
  //test....
@@ -196,17 +197,7 @@ void BackEnd::setB_point(QPointF newB_point)
 
 
 Q_INVOKABLE void BackEnd::myfuntion(){
-    float x=0,y=0;
-    QPointF a;
-    for (int i=0;i<10;i++)
-    {
-        x=x+1;
-        y=y+10;
-        a.setX(x);
-        a.setX(y);
-        setB_point(a);
-    }
-    qDebug()<<"Chung ta xong roi";
+
 }
 
 
@@ -215,19 +206,29 @@ Q_INVOKABLE void BackEnd::myfuntion(){
 //
 
 
-
+float i=0;
+QPointF f_data;
 Q_INVOKABLE void BackEnd::serialport_read()
 {
 //check data
 
     int size =serialp->bytesAvailable();
-    if(size==size_protocol)
+    if(size==size_protocol)   //check full datas before read  - or read buffer make error
     {
+        /*
+         *PROTOCOL Read: |STX|[1]|[2]|ETX|
+         *  [1]:MSB , [2] LSB : 0->360
+         *
+         *
+         */
         data_rv=serialp->readAll();
         if(data_rv[0]=='2' && data_rv[size_protocol-1]=='3')
             qDebug()<<"Nhan data thanh cong";
-    //do some thing take,collect data
-        // bytes -> float ?? ->
-
+           uint16_t data= (uint16_t)(data_rv[1]<<8)+data_rv[2];
+            f_data.setX(data);
+            f_data.setY(i);
+            i++;
+            setB_point(f_data);
+            qDebug()<<"get "<<i<<"data";
     }
 }

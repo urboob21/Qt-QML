@@ -5,8 +5,20 @@ import MyBackEnd 1.0
 
 
 Rectangle {
+ property double x1;
+ property double y1;
+    property int x2:10;
+    property int y2:10
+    Connections{
+        target:mybackend
+        onB_pointChanged:{
+            //emit: datachange()
+            console.log(mybackend.b_point.x)
+            console.log(mybackend.b_point.y)
+            lineSeries1.append(mybackend.b_point.x,mybackend.b_point.y)
 
-
+        }
+    }
     color:"#C9CDEA"
 //next button
     Button{
@@ -38,14 +50,8 @@ Rectangle {
             m_stackview.pop()
         }
     }
-//
-    Button{
-        text:"GET"
-        anchors{
-            right: parent.right
-        }
-        onClicked: mybackend.myfuntion();
-    }
+
+
 
 //
     GroupBox{
@@ -141,7 +147,7 @@ Rectangle {
                     ValueAxis {
                         id: axisY1
                         min: 0
-                        max: 100
+                        max: 200
                         gridVisible: false
                         color: "black"
                         labelsColor: "black"
