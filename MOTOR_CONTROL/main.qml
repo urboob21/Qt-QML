@@ -10,31 +10,26 @@ Window {
     property string btn_connect_name: "Connect"
 
 
-    //
+    //stackview
    StackView {
        id:m_stackview
        anchors.fill:parent
        initialItem: "SerialPage.qml"
-        signal datachange
-       onDatachange:{
-       console.log("jaja")}
    }
+
     BackEnd{
         id:mybackend
-        //uart-signal
+
+        //UART-signal
         onUart_close: {
             btn_connect_name="Connect"
-
             console.log("Da ngat ket noi in FrontEnd");
         }
+
         onUart_open: {
            console.log("Da  ket noi in FrontEnd");
             btn_connect_name="DisConnect"
         }
-        //
-
     }
-
-
 
 }

@@ -5,9 +5,5 @@
         <file>TuningPage.qml</file>
         <file>pictures/logo.jpg</file>
         <file>ControlPage.qml</file>
-        <file>MyChart.qml</file>
-        <file>ConTrolPage_2.qml</file>
-        <file>ChartPosition.qml</file>
-        <file>ChartVel.qml</file>
     </qresource>
 </RCC>

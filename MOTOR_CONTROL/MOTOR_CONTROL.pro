@@ -2,7 +2,6 @@ QT += quick quickcontrols2 widgets charts serialport
 
 SOURCES += \
         backend.cpp \
-        data.cpp \
         main.cpp
 
 resources.files = main.qml 
@@ -29,5 +28,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    backend.h \
-    data.h
+    backend.h

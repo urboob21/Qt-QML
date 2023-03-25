@@ -5,22 +5,22 @@ import MyBackEnd 1.0
 
 
 Rectangle {
- property double x1;
- property double y1;
-    property int x2:10;
-    property int y2:10
+
+    /*-------- data form backend append to chart ---------*/
     Connections{
         target:mybackend
         onB_pointChanged:{
-            //emit: datachange()
             console.log(mybackend.b_point.x)
             console.log(mybackend.b_point.y)
             lineSeries1.append(mybackend.b_point.x,mybackend.b_point.y)
-
+            lineSeries2.append(mybackend.b_point.x,125);
         }
     }
+
+    /*--------------    BODY  -------------*/
     color:"#C9CDEA"
-//next button
+
+//NEXT button
     Button{
         width: 100
         height: 50
@@ -35,7 +35,8 @@ Rectangle {
             m_stackview.push("ControlPage.qml")
         }
     }
-//back button
+
+//BACK button
     Button{
         width: 100
         height: 50
@@ -51,9 +52,26 @@ Rectangle {
         }
     }
 
+//SetPoint Textfied
+    Column{
+        anchors{
+            left: parent.left
+            top:parent.top
+            topMargin: 40
+            margins: 20
+        }
 
+        spacing:20
+        Label{
+            text:"Set Position (dec)"
+        }
+        TextField{
+            id:tf_setpoint
 
-//
+        }
+    }
+
+//Content
     GroupBox{
         id:gb_tuning
         font.pixelSize: 15
@@ -109,6 +127,7 @@ Rectangle {
                         mybackend.setB_kp(tf_kp.text)
                         mybackend.setB_ki(tf_ki.text)
                         mybackend.setB_kd(tf_kd.text)
+                        mybackend.setB_setpoint(tf_setpoint.text)
                         //send data
                         mybackend.uart_SEND();
                     }
@@ -131,6 +150,7 @@ Rectangle {
                     onClicked: {
                         //send data
                         mybackend.uart_REQUEST();
+                        lineSeries1.clear();
                     }
                 }
             }
@@ -179,21 +199,21 @@ Rectangle {
 //                            }
                     LineSeries {
                         id: lineSeries1
-                        name: "SET POINT"
+                        name: "TUNING POINT"
                         color: "blue"
                         axisX: axisX
                         axisY: axisY1
                     }
 
-//                    LineSeries {
-//                        id: lineSeries2
-//                        name: "TUNING POINT"
-//                        color: "red"
+                    LineSeries {
+                        id: lineSeries2
+                        name: "SET POINT"
+                        color: "red"
 
-//                        axisX: axisX
-//                        axisY: axisY1
+                        axisX: axisX
+                        axisY: axisY1
 
-//                    }
+                    }
                 }
        //
         }

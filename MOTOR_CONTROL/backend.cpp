@@ -1,12 +1,14 @@
 #include "backend.h"
 
 #include <QDebug>
+/*------------  constructer data --------------*/
 BackEnd::BackEnd(QObject *parent)
     : QObject{parent}
 {
 
 }
 
+ /*------------  UART --------------*/
 QString BackEnd::b_com() const
 {
     return mb_com;
@@ -33,7 +35,6 @@ void BackEnd::setB_com(const QString &b_com)
     emit b_comChanged();
 }
 
-///
 Q_INVOKABLE void BackEnd::UART_connect(){
     qDebug()<<"Da ket noi in BackEnd";
     if(!(serialp->isOpen()))
@@ -47,6 +48,7 @@ Q_INVOKABLE void BackEnd::UART_connect(){
         serialp->setParity(QSerialPort::NoParity);
         serialp->open(QIODevice::ReadWrite);
 
+        //conect signal read with my handle funtion
         connect(serialp,SIGNAL(readyRead()),this,SLOT(serialport_read()));
         //emit signal da ket noi
         emit uart_open();
@@ -59,19 +61,19 @@ Q_INVOKABLE void BackEnd::UART_connect(){
 
     }
 }
-//SEND CMD
+
+//cmd : SEND  PID value
 Q_INVOKABLE void BackEnd::uart_SEND(){
-    //send
-    //(1)get data from input QString
-    //qDebug()<<" Kp:"<<m_b_kp<<" Ki:"<<m_b_ki<<" Kd:"<<m_b_kd;
     uint8_t sKp[4];
     uint8_t sKi[4];
     uint8_t sKd[4];
-    //(2) QString to float
+
+    //(1) QString to float
     float f_kp=m_b_kp.toFloat();
     float f_ki=m_b_ki.toFloat();
     float f_kd=m_b_kd.toFloat();
 
+    //(2) float to 4bytes array
     mylib.float2Ints(f_kp,sKp);
     mylib.float2Ints(f_ki,sKi);
     mylib.float2Ints(f_kd,sKd);
@@ -83,21 +85,19 @@ Q_INVOKABLE void BackEnd::uart_SEND(){
     index=index+sizeof(sKi);
     memcpy(pDATA+index,sKd,sizeof(sKd));
 
-    // float toarray
     serialport_send(pSPID);
-} //SEND PID value
+}
 
+//cmd : SNED TUNING PID
 Q_INVOKABLE void BackEnd::uart_TUNING(){
-
     serialport_send(pCTUN);
 } //SEND Tuning pid
 
-
+//cmd : GET  POSITION
 Q_INVOKABLE void BackEnd::uart_REQUEST(){
 
     serialport_send(pGPID);
-} //SEND request <- STM
-
+}
 
 
 Q_INVOKABLE void BackEnd::serialport_send(uint8_t* tCMD){
@@ -105,36 +105,59 @@ Q_INVOKABLE void BackEnd::serialport_send(uint8_t* tCMD){
     {
         qDebug()<<"Chua ket noi UART";
         return;
-
     }
     else
     {
-    //CMD = ?
+        //CMD = ?
         for(int i=0;i<4;i++)
-    pCMD[i]=tCMD[i];
-    //memcpy data
-    quint8 index=0;
-    memcpy(protocol+index,&pSTX,1);
-    index=index+sizeof(pSTX);
-    memcpy(protocol+index,pCMD,sizeof(pCMD));
-    index=index+sizeof(pCMD);
-    memcpy(protocol+index,pOPT,sizeof(pOPT));
-    index=index+sizeof(pOPT);
-    memcpy(protocol+index,pDATA,sizeof(pDATA));
-    index=index+sizeof(pDATA);
-    memcpy(protocol+index,&pETX,sizeof(pETX));
-    index=index+sizeof(pETX);
-    //sent data
-    serialp->write(protocol,index);
+            pCMD[i]=tCMD[i];
+        //memcpy data
+        quint8 index=0;
+        memcpy(protocol+index,&pSTX,1);
+        index=index+sizeof(pSTX);
+        memcpy(protocol+index,pCMD,sizeof(pCMD));
+        index=index+sizeof(pCMD);
+        memcpy(protocol+index,pOPT,sizeof(pOPT));
+        index=index+sizeof(pOPT);
+        memcpy(protocol+index,pDATA,sizeof(pDATA));
+        index=index+sizeof(pDATA);
+        memcpy(protocol+index,&pETX,sizeof(pETX));
+        index=index+sizeof(pETX);
+        //sent data
+        serialp->write(protocol,index);
 
-
-    //emit
-    emit uart_send();
-    qDebug()<<"data send:"<<protocol <<pDATA;
+        //emit
+        emit uart_send();
+        qDebug()<<"data send:"<<protocol <<pDATA;
     }
 }
- //test....
 
+
+Q_INVOKABLE void BackEnd::serialport_read()
+{
+
+    QByteArray data_rv;
+    int size =serialp->bytesAvailable();
+    if(size>=400)   //check full datas before read  - or read buffer make error
+    {
+        qDebug()<<"realdata";
+        data_rv=serialp->readAll();
+        {
+            float x_index=0;
+            qDebug()<<"Nhan data thanh cong";
+            for(int i=0;i<200;i++)
+            {
+                x_index+=0.1;
+                uint16_t data=0;
+                data=(((uint16_t)data_rv[2*i]<<8)&0xFF00)|((uint16_t)(data_rv[2*i+1])&0x00FF);
+                f_data.setX(x_index);
+                f_data.setY(data);
+                setB_point(f_data);
+            }
+        }
+
+    }
+}
 
 
 
@@ -177,8 +200,6 @@ void BackEnd::setB_kd(const QString &newB_kd)
     emit b_kdChanged();
 }
 
-
-/////
 QPointF BackEnd::b_point() const
 {
     return m_b_point;
@@ -192,43 +213,20 @@ void BackEnd::setB_point(QPointF newB_point)
     emit b_pointChanged(); //tin hieu set o duoi qml
 }
 
-
-
-
-
 Q_INVOKABLE void BackEnd::myfuntion(){
 
 }
 
-
-
-
-//
-
-
-float i=0;
-QPointF f_data;
-Q_INVOKABLE void BackEnd::serialport_read()
+///
+QString BackEnd::b_setpoint() const
 {
-//check data
+    return m_b_setpoint;
+}
 
-    int size =serialp->bytesAvailable();
-    if(size==size_protocol)   //check full datas before read  - or read buffer make error
-    {
-        /*
-         *PROTOCOL Read: |STX|[1]|[2]|ETX|
-         *  [1]:MSB , [2] LSB : 0->360
-         *
-         *
-         */
-        data_rv=serialp->readAll();
-        if(data_rv[0]=='2' && data_rv[size_protocol-1]=='3')
-            qDebug()<<"Nhan data thanh cong";
-           uint16_t data= (uint16_t)(data_rv[1]<<8)+data_rv[2];
-            f_data.setX(data);
-            f_data.setY(i);
-            i++;
-            setB_point(f_data);
-            qDebug()<<"get "<<i<<"data";
-    }
+void BackEnd::setB_setpoint(const QString &newB_setpoint)
+{
+    if (m_b_setpoint == newB_setpoint)
+        return;
+    m_b_setpoint = newB_setpoint;
+    emit b_setpointChanged();
 }

@@ -8,8 +8,10 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    /*----------- QObject to QML Component----------*/
     qmlRegisterType<BackEnd>("MyBackEnd",1,0,"BackEnd");
     //qmlRegisterType<QObject Name>("Name import",1,0,"Name Component");
+
     QQmlApplicationEngine engine;
     const QUrl url(u"qrc:/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
